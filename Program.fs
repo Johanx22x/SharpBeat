@@ -33,6 +33,7 @@ type MainWindow() =
     do
         base.Title <- "SharpTune"
         base.Content <- Main.view()
+        base.Icon <- WindowIcon("Assets\Icons\icon.ico")
 
 type App() =
     inherit Application()
