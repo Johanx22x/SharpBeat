@@ -3,13 +3,13 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
-    <RootNamespace>SharpTune</RootNamespace>
-    <PackageId>SharpTune</PackageId>
+    <RootNamespace>SharpBeat</RootNamespace>
+    <PackageId>SharpBeat</PackageId>
     <Authors>Johanx22x</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/Johanx22x/SharpTune</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/Johanx22x/SharpBeat</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Title>SharpTune</Title>
+    <Title>SharpBeat</Title>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Lib/GUI/Colors.fs" />
+    <Compile Include="Lib/GUI/PlayBar.fs" />
+    <Compile Include="Lib/GUI/SearchBar.fs" />
+    <Compile Include="Lib/GUI/MainWindow.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
