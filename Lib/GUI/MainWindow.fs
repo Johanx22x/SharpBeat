@@ -99,6 +99,6 @@ module MainWindow =
         do
             base.Title <- "SharpTune"
             base.Content <- view()
-            base.Icon <- WindowIcon("Assets\Icons\icon.ico")
+            base.Icon <- WindowIcon("Assets/Icons/icon.ico")
             base.MinWidth <- 800.0
             base.MinHeight <- 500.0
