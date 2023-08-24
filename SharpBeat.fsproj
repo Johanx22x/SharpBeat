@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <Compile Include="Lib/GUI/Colors.fs" />
+    <Compile Include="Lib/GUI/Icons.fs" />
+    <Compile Include="Lib/GUI/ToolBar.fs" />
     <Compile Include="Lib/GUI/PlayBar.fs" />
     <Compile Include="Lib/GUI/SearchBar.fs" />
     <Compile Include="Lib/GUI/MainWindow.fs" />

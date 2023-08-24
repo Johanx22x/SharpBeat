@@ -1,15 +1,9 @@
 namespace SharpBeat.Lib.GUI
 
 module PlayBar =
-    open Avalonia
-    open Avalonia.Controls.ApplicationLifetimes
-    open Avalonia.Themes.Fluent
-    open Avalonia.FuncUI.Hosts
     open Avalonia.Controls
-    open Avalonia.FuncUI
     open Avalonia.FuncUI.DSL
     open Avalonia.Layout
-    open Avalonia.FuncUI.Types
     open SharpBeat.Lib.GUI
 
     let mediaButtons = 
@@ -21,17 +15,17 @@ module PlayBar =
 
             StackPanel.children [
                 Button.create [
-                    Button.content "Previous"
+                    Button.content Icons.previous
                     Button.width 100.0
                     Button.horizontalAlignment HorizontalAlignment.Center
                 ]
                 Button.create [
-                    Button.content "Play"
+                    Button.content Icons.play
                     Button.width 100.0
                     Button.horizontalAlignment HorizontalAlignment.Center
                 ]
                 Button.create [
-                    Button.content "Next"
+                    Button.content Icons.next
                     Button.width 100.0
                     Button.horizontalAlignment HorizontalAlignment.Center
                 ]
@@ -60,10 +54,12 @@ module PlayBar =
             StackPanel.verticalAlignment VerticalAlignment.Bottom
             StackPanel.horizontalAlignment HorizontalAlignment.Center
             StackPanel.orientation Orientation.Vertical
-            StackPanel.dock Dock.Bottom
+            StackPanel.dock Dock.Right
 
             StackPanel.children [
                 mediaButtons
                 progressBar
             ]
         ]
+        
+

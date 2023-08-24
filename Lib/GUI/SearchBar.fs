@@ -1,15 +1,9 @@
 namespace SharpBeat.Lib.GUI
 
 module SearchBar =
-    open Avalonia
-    open Avalonia.Controls.ApplicationLifetimes
-    open Avalonia.Themes.Fluent
-    open Avalonia.FuncUI.Hosts
     open Avalonia.Controls
-    open Avalonia.FuncUI
     open Avalonia.FuncUI.DSL
     open Avalonia.Layout
-    open Avalonia.FuncUI.Types
 
     let searchBar (tag: string) =
         let searchText = "Search " + tag + "..."
