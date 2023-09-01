@@ -48,24 +48,6 @@ module MainWindow =
                     DockPanel.background Colors.lightBackground
                 ]
 
-            let albumPageContent = 
-                DockPanel.create [ 
-                    DockPanel.children [
-                        // Search bar
-                        SearchBar.searchBar "Albums"
-
-                        // Tool bar
-                        ToolBar.toolBar
-
-                        // Album list
-                        ListBox.create [
-                            ListBox.dataItems ["Album 1"; "Album 2"]
-                            ListBox.dock Dock.Top
-                        ]
-                    ]
-                    DockPanel.background Colors.lightBackground
-                ]
-
             let tabs : IView list = [
                 TabItem.create [
                     TabItem.header "Songs"
@@ -74,10 +56,6 @@ module MainWindow =
                 TabItem.create [
                     TabItem.header "Playlists"
                     TabItem.content playlistPageContent
-                ]
-                TabItem.create [
-                    TabItem.header "Albums"
-                    TabItem.content albumPageContent
                 ]
             ]
 
