@@ -16,6 +16,7 @@ module ToolBar =
 
                     StackPanel.children [
                         Button.create [
+                            Button.background Colors.Light.primary
                             Button.content Icons.create
                             Button.width 50.0
                             Button.horizontalAlignment HorizontalAlignment.Center
@@ -35,7 +36,7 @@ module ToolBar =
                 ]
             )
 
-            Border.background Colors.lightBackground
+            Border.background Colors.Light.secondary
             Border.dock Dock.Right
             Border.padding 15.
         ]

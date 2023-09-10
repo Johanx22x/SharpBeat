@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <Compile Include="Lib/GUI/Colors.fs" />
+    <Compile Include="Lib/GUI/PlayerLib.fs" />
+    <Compile Include="Lib/GUI/Song.fs" />
     <Compile Include="Lib/GUI/Icons.fs" />
     <Compile Include="Lib/GUI/ToolBar.fs" />
     <Compile Include="Lib/GUI/PlayBar.fs" />
@@ -28,9 +30,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="7.1.0" />
     <PackageReference Include="Avalonia.Desktop" Version="11.0.0" />
     <PackageReference Include="Avalonia.FuncUI" Version="1.0.0" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0" />
+    <PackageReference Include="FSharp.JsonApi" Version="2.1.1" />
+    <PackageReference Include="LibVLCSharp" Version="3.7.0" />
+    <PackageReference Include="LibVLCSharp.Avalonia" Version="3.7.0" />
   </ItemGroup>
 
 </Project>
