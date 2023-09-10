@@ -61,16 +61,17 @@ module PlayBar =
 
     let playBar (song: IWritable<Option<Song>>) = 
 
-        let player = getEmptyPlayer
-        //let media = getMediaFromUri(new Uri(song.Current.Value.url()))
-        let media = song.Current |>
-                     function 
-                     | Some(song) -> getMediaFromUri(new Uri(song.url()))
-                     | None -> getMediaFromUri(new Uri("file://"))
-        //let media = getMediaFromUri(new Uri("http://localhost:8080/c9244df1-2995-3938-a014-51b8e5cde4ac/outputlist.m3u8"))
+        // XXX: uncomment this, this works for playing audio, apparently there's a media player component available from
+        // the vlcsharp avalonia library, we just need to dig deeper lmao
+        // let player = getEmptyPlayer
+        // let media = song.Current |>
+        //              function 
+        //              | Some(song) -> getMediaFromUri(new Uri(song.url()))
+        //              | None -> getMediaFromUri(new Uri("file://"))
     
-        player.Media <- media
-        player.Play() |> ignore
+        // TODO: yk
+        // player.Media <- media
+        // player.Play() |> ignore
 
         StackPanel.create [
             StackPanel.verticalAlignment VerticalAlignment.Bottom
@@ -79,6 +80,7 @@ module PlayBar =
             StackPanel.dock Dock.Right
             StackPanel.children [
                 mediaButtons
+                // NOTE: I'm planning on somwhow getting these values from the player
                 progressBar 0 100 46
             ]
         ]
