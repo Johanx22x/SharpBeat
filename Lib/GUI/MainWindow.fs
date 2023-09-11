@@ -1,4 +1,11 @@
 namespace SharpBeat.Lib.GUI
+open Song
+
+open Avalonia
+open Avalonia.Controls
+open Avalonia.Media
+open LibVLCSharp.Avalonia
+open LibVLCSharp.Shared
 
 module MainWindow =
     open Avalonia.FuncUI.Hosts
@@ -9,31 +16,49 @@ module MainWindow =
     open SharpBeat.Lib.GUI
 
     let view () =
-        Component(fun _ ->
+        Component(fun ctx ->
+            let songs = ctx.useState<Song list>([])
+            let current = ctx.useState<Song Option>(None)
 
             let songsPageContent = 
                 DockPanel.create [ 
                     DockPanel.children [
                         // Search bar
-                        SearchBar.searchBar "Songs"
+                        SearchBar.searchBar "Songs" (fun query -> songs.Set(Api.getSongs query))
                         
                         // Tool bar
                         ToolBar.toolBar
 
                         // Song list
+
                         ListBox.create [
-                            ListBox.dataItems ["Song 1"; "Song 2"; "Song 3"; "Song 4"; "Song 5"; "Song 1"; "Song 2"; "Song 3"; "Song 4"; "Song 5"; "Song 1"; "Song 2"; "Song 3"; "Song 4"; "Song 5"; "Song 1"; "Song 2"; "Song 3"; "Song 4"; "Song 5"]
+                            ListBox.background Colors.Light.background
+                            ListBox.foreground Colors.Light.foreground
+                            ListBox.dataItems songs.Current
+                            ListBox.itemTemplate (
+                            // TODO: Have a song selected by default
+                            DataTemplateView<Song>.create(fun song -> 
+                                    TextBlock.create [
+                                        TextBlock.text 
+                                            $"{song.Artist} - {song.Title}"
+                                    ]
+                                )
+                            )
+                            ListBox.onSelectedItemChanged (fun (item) -> printfn "%s" (item.ToString()))
                             ListBox.dock Dock.Top
                         ]
                     ]
-                    DockPanel.background Colors.lightBackground
+                    DockPanel.background Colors.Light.background
                 ]
+
+            // TODO: sqlite playlist database
+            // NOTE: here you should use some playlist state
 
             let playlistPageContent = 
                 DockPanel.create [ 
                     DockPanel.children [
                         // Search bar
-                        SearchBar.searchBar "Playlists"
+                        SearchBar.searchBar "Playlists" (fun a -> a |> ignore)
 
                         // Tool bar
                         ToolBar.toolBar
@@ -45,15 +70,17 @@ module MainWindow =
                         ]
 
                     ]
-                    DockPanel.background Colors.lightBackground
+                    DockPanel.background Colors.Light.background
                 ]
 
             let tabs : IView list = [
                 TabItem.create [
+                    TabItem.foreground Colors.Light.foreground
                     TabItem.header "Songs"
                     TabItem.content songsPageContent
                 ]
                 TabItem.create [
+                    TabItem.foreground Colors.Light.foreground
                     TabItem.header "Playlists"
                     TabItem.content playlistPageContent
                 ]
@@ -76,12 +103,12 @@ module MainWindow =
                                     ]
 
                                     // Play bar
-                                    PlayBar.playBar
+                                    PlayBar.playBar current
                                 ]
                             ]
                         )
 
-                        Border.background Colors.primaryColor
+                        Border.background Colors.Light.primary
                         Border.dock Dock.Bottom
                     ]
 
@@ -90,8 +117,8 @@ module MainWindow =
                         TabControl.tabStripPlacement Dock.Left
                         TabControl.viewItems tabs
                         TabControl.dock Dock.Top
-                        TabControl.background Colors.darkBackground
-                        TabControl.foreground Colors.foreground
+                        TabControl.background Colors.Light.background
+                        TabControl.foreground Colors.Light.foreground
                     ]
                 ]
             ]

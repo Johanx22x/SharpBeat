@@ -1,10 +1,18 @@
 namespace SharpBeat.Lib.GUI
 
 module PlayBar =
+    open Song
+    open Avalonia.FuncUI
     open Avalonia.Controls
     open Avalonia.FuncUI.DSL
     open Avalonia.Layout
     open SharpBeat.Lib.GUI
+    open LibVLCSharp.Shared
+    open LibVLCSharp
+    open PlayerLib
+    open System
+
+    open LibVLCSharp.Avalonia
 
     let mediaButtons = 
         StackPanel.create [
@@ -32,7 +40,8 @@ module PlayBar =
             ]
         ]
 
-    let progressBar =
+
+    let progressBar min max curr = 
         StackPanel.create [
             StackPanel.verticalAlignment VerticalAlignment.Bottom
             StackPanel.horizontalAlignment HorizontalAlignment.Center
@@ -41,25 +50,37 @@ module PlayBar =
 
             StackPanel.children [
                 Slider.create [
-                    Slider.minimum 0.0
-                    Slider.maximum 100.0
+                    Slider.minimum min
+                    Slider.maximum max
+                    Slider.value curr
                     Slider.width 428.0
                     Slider.horizontalAlignment HorizontalAlignment.Center
                 ]
             ]
         ]
 
-    let playBar = 
+    let playBar (song: IWritable<Option<Song>>) = 
+
+        // XXX: uncomment this, this works for playing audio, apparently there's a media player component available from
+        // the vlcsharp avalonia library, we just need to dig deeper lmao
+        // let player = getEmptyPlayer
+        // let media = song.Current |>
+        //              function 
+        //              | Some(song) -> getMediaFromUri(new Uri(song.url()))
+        //              | None -> getMediaFromUri(new Uri("file://"))
+    
+        // TODO: yk
+        // player.Media <- media
+        // player.Play() |> ignore
+
         StackPanel.create [
             StackPanel.verticalAlignment VerticalAlignment.Bottom
             StackPanel.horizontalAlignment HorizontalAlignment.Center
             StackPanel.orientation Orientation.Vertical
             StackPanel.dock Dock.Right
-
             StackPanel.children [
                 mediaButtons
-                progressBar
+                // NOTE: I'm planning on somwhow getting these values from the player
+                progressBar 0 100 46
             ]
         ]
-        
-
