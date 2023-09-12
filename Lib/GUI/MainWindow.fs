@@ -35,17 +35,17 @@ module MainWindow =
                             ListBox.background Colors.Light.background
                             ListBox.foreground Colors.Light.foreground
                             ListBox.dataItems songs.Current
-                            ListBox.itemTemplate (
+                            ListBox.onSelectedItemChanged (fun (item) -> printfn "%A" (item))
+                            ListBox.dock Dock.Top
+
                             // TODO: Have a song selected by default
+                            ListBox.itemTemplate (
                             DataTemplateView<Song>.create(fun song -> 
                                     TextBlock.create [
-                                        TextBlock.text 
-                                            $"{song.Artist} - {song.Title}"
+                                        TextBlock.text $"{song.Artist} - {song.Title}"
                                     ]
                                 )
                             )
-                            ListBox.onSelectedItemChanged (fun (item) -> printfn "%s" (item.ToString()))
-                            ListBox.dock Dock.Top
                         ]
                     ]
                     DockPanel.background Colors.Light.background
