@@ -20,7 +20,8 @@
   <ItemGroup>
     <Compile Include="Lib/GUI/Colors.fs" />
     <Compile Include="Lib/GUI/PlayerLib.fs" />
-    <Compile Include="Lib/GUI/Song.fs" />
+    <Compile Include="Lib/Models/Song.fs" />
+    <Compile Include="Lib/Backend/Api.fs" />
     <Compile Include="Lib/GUI/Icons.fs" />
     <Compile Include="Lib/GUI/ToolBar.fs" />
     <Compile Include="Lib/GUI/PlayBar.fs" />

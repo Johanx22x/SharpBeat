@@ -1,5 +1,4 @@
 namespace SharpBeat.Lib.GUI
-open Song
 
 open Avalonia
 open Avalonia.Controls
@@ -14,6 +13,8 @@ module MainWindow =
     open Avalonia.FuncUI.DSL
     open Avalonia.FuncUI.Types
     open SharpBeat.Lib.GUI
+    open SharpBeat.Lib.Models.Song
+    open SharpBeat.Lib.Backend
 
     let view () =
         Component(fun ctx ->

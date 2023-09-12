@@ -1,12 +1,12 @@
 namespace SharpBeat.Lib.GUI
 
 module PlayBar =
-    open Song
     open Avalonia.FuncUI
     open Avalonia.Controls
     open Avalonia.FuncUI.DSL
     open Avalonia.Layout
     open SharpBeat.Lib.GUI
+    open SharpBeat.Lib.Models.Song
     open LibVLCSharp.Shared
     open LibVLCSharp
     open PlayerLib
