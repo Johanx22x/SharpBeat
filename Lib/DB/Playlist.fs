@@ -149,13 +149,10 @@ module Playlist =
         db.Close()
 
     let addSampleData() =
-        addPlaylist "Random"
-
-        addSong ("d79105a6-67c3-30fd-bda4-05ab5e7f36e2", "The Lost Soul Down")
-        addSong ("d47806c2-fbff-3f71-8488-5185d8ca48e9", "Stay With Me")
-
-        addPlaylistSong ("Random", "d79105a6-67c3-30fd-bda4-05ab5e7f36e2")
-        addPlaylistSong ("Random", "d47806c2-fbff-3f71-8488-5185d8ca48e9")
+        addPlaylist "Favorites"
+        addPlaylist "Workout"
+        addPlaylist "Chill"
+        addPlaylist "JPOP"
 
     let checkDBState() =
         if not <| System.IO.File.Exists("SharpBeat.db") then

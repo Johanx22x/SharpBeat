@@ -146,7 +146,7 @@ module Icons =
             Canvas.height 24.0
             Canvas.children [
                 Path.create [
-                    Path.fill "black"
+                    Path.fill Colors.Light.foreground
                     Path.data "M12,4C7.58,4 4,7.58 4,12C4,16.42 7.58,20 12,20C16.42,20 20,16.42 20,12H18C18,15.31 15.31,18 12,18C8.69,18 6,15.31 6,12C6,8.69 8.69,6 12,6V8L16,4L12,0V4Z"
                 ]
             ]

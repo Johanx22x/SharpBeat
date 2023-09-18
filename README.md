@@ -22,3 +22,14 @@ requests, or any questions you might have. Pull requests are also accepted.
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file
 for details.
+
+# TODO:
+
+- [X] Reproducir la rola (Play, Pause, ...)
+- [X] Slider de volumen
+- [X] Los filtros
+- [] Manejar playlists (CRUD)
+
+## Optional
+- [] Fix current is changed when shuffle or refresh
+- [] Fix filters to work simultaneously

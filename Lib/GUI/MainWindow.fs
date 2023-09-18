@@ -3,6 +3,7 @@ namespace SharpBeat.Lib.GUI
 open Avalonia.Controls
 
 module MainWindow =
+    open Avalonia
     open Avalonia.FuncUI.Hosts
     open Avalonia.FuncUI
     open Avalonia.FuncUI.DSL
@@ -57,9 +58,18 @@ module MainWindow =
             let selectPlaylist (playlist: obj) =
                 match playlist with
                 | :? string as playlist -> 
-                    printfn "Selected playlist: %s" playlist 
-                    printfn "Songs: %A" (getPlaylistSongs playlist)
-                    songs.Set(getPlaylistSongs playlist |> List.map (fun song -> Api.getSongs song) |> List.concat)
+                    let _songs = getPlaylistSongs playlist
+                    let serverSongs = getPlaylistSongs playlist |> List.map (fun song -> Api.getSongs song) |> List.concat
+
+                    // for song in songs if song not in serversongs then delete song from playlist
+                    _songs |> List.iter (fun song -> 
+                        if serverSongs |> List.exists (fun serverSong -> serverSong.Hash = song) then
+                            ()
+                        else
+                            removePlaylistSong (playlist, song)
+                    )
+
+                    songs.Set(serverSongs)
                 | _ -> ()
 
             let songsPageContent = 
@@ -68,16 +78,6 @@ module MainWindow =
                         DockPanel.create [ 
                             DockPanel.horizontalAlignment HorizontalAlignment.Center
                             DockPanel.children [
-                                // Refresh button
-                                Button.create [
-                                    Button.content Icons.refresh
-                                    Button.width 50.0
-                                    Button.horizontalAlignment HorizontalAlignment.Center
-                                    Button.onClick (fun _ -> 
-                                        songs.Set(Api.getSongs "")
-                                    )
-                                ]
-
                                 // Search bar
                                 SearchBar.searchBar "Songs" (fun query -> 
                                     // TODO: Implement a better filtering system
@@ -85,30 +85,63 @@ module MainWindow =
                                 )
 
                                 // Genre dropdown
-                                ComboBox.create [
-                                    ComboBox.background Colors.Light.background
-                                    ComboBox.foreground Colors.Light.foreground
-                                    ComboBox.borderThickness 1.
-                                    ComboBox.borderBrush Colors.Light.background
-                                    ComboBox.dock Dock.Left
-                                    ComboBox.width 100.
-                                    ComboBox.margin 10.
+                                StackPanel.create [
+                                    StackPanel.children [
+                                        TextBlock.create [
+                                            TextBlock.text "Genre:"
+                                            TextBlock.fontSize 15.
+                                        ]
+                                        ComboBox.create [
+                                            ComboBox.borderThickness 1.
+                                            ComboBox.borderBrush Colors.Light.background
+                                            ComboBox.dock Dock.Left
+                                            ComboBox.width 100.
+                                            ComboBox.dataItems genres.Current
+                                            ComboBox.selectedItem genres.Current.[0]
 
-                                    ComboBox.dataItems genres.Current
+                                            ComboBox.itemTemplate (
+                                                DataTemplateView<string>.create(fun genre -> 
+                                                    TextBlock.create [
+                                                        TextBlock.text genre
+                                                    ]
+                                                )
+                                            )
 
-                                    ComboBox.itemTemplate (
-                                        DataTemplateView<string>.create(fun genre -> 
-                                            TextBlock.create [
-                                                TextBlock.text genre
-                                            ]
-                                        )
-                                    )
+                                            ComboBox.onSelectedItemChanged (fun genre ->
+                                                // TODO: Implement a better filtering system
+                                                let _songs = Api.getSongs ""
+                                                let _songs = if genre = "All" then _songs else _songs |> List.filter (fun song -> song.Genre = string genre)
+                                                songs.Set(_songs)
+                                            )
+                                        ]
+                                    ]
+                                    StackPanel.orientation Orientation.Vertical
+                                    StackPanel.horizontalAlignment HorizontalAlignment.Center
+                                    StackPanel.margin (Thickness (10., 0., 0., 0.))
+                                ]
 
-                                    ComboBox.onSelectedItemChanged (fun genre ->
-                                        // TODO: Implement a better filtering system
-                                        songs.Set(Api.getSongs (string genre))
+                                // Duration filter
+                                // Like: 0s - 300s or 100s - 200s
+                                DurationFilter.durationFilter (fun min max ->
+                                    // TODO: Implement a better filtering system
+                                    let _songs = Api.getSongs ""
+                                    let _songs = if min = 0 && max = -1 then _songs else _songs |> List.filter (fun song -> if max = -1 then song.Duration >= int16 min else song.Duration >= int16 min && song.Duration <= int16 max)
+
+                                    songs.Set(_songs)
+                                )
+
+                                // Refresh button
+                                Button.create [
+                                    Button.background Colors.Light.primary
+                                    Button.content Icons.refresh
+                                    Button.margin (Thickness (10., 0., 0., 0.))
+                                    Button.horizontalAlignment HorizontalAlignment.Center
+                                    Button.verticalAlignment VerticalAlignment.Center
+                                    Button.onClick (fun _ -> 
+                                        songs.Set(Api.getSongs "")
                                     )
                                 ]
+
                             ]
 
                             DockPanel.dock Dock.Top
@@ -117,8 +150,6 @@ module MainWindow =
                         
                         // Song list
                         ListBox.create [
-                            ListBox.background Colors.Light.background
-                            ListBox.foreground Colors.Light.foreground
                             ListBox.dataItems songs.Current
                             ListBox.dock Dock.Top
                             ListBox.onSelectedItemChanged (fun song -> setCurrent song)
@@ -126,7 +157,7 @@ module MainWindow =
                             ListBox.itemTemplate (
                             DataTemplateView<Song>.create(fun song -> 
                                     TextBlock.create [
-                                        TextBlock.text $"{song.Artist} - {song.Title}"
+                                        TextBlock.text $"{song.Title} - {song.Artist}"
                                     ]
                                 )
                             )

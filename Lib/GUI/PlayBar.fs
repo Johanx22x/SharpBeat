@@ -1,6 +1,7 @@
 namespace SharpBeat.Lib.GUI
 
 module PlayBar =
+    open Avalonia
     open Avalonia.Controls
     open Avalonia.FuncUI.DSL
     open Avalonia.Layout
@@ -108,7 +109,7 @@ module PlayBar =
                     TextBlock.horizontalAlignment HorizontalAlignment.Center
                     TextBlock.fontWeight FontWeight.Bold
                     TextBlock.fontSize 20.
-                    TextBlock.margin 10.
+                    TextBlock.margin (Thickness (0., 20., 0., 0.))
                 ]
 
                 mediaButtons (

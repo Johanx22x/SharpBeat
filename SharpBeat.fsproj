@@ -22,6 +22,7 @@
     <Compile Include="Lib/Models/Types.fs" />
     <Compile Include="Lib/GUI/Colors.fs" />
     <Compile Include="Lib/Backend/PlayerLib.fs" />
+    <Compile Include="Lib/GUI/DurationFilter.fs" />
     <Compile Include="Lib/Models/Song.fs" />
     <Compile Include="Lib/Backend/Api.fs" />
     <Compile Include="Lib/GUI/Icons.fs" />
