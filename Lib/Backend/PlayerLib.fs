@@ -1,4 +1,4 @@
-namespace SharpBeat.Lib.GUI
+namespace SharpBeat.Lib.Backend
 
 module PlayerLib =
     open LibVLCSharp.Shared
@@ -8,6 +8,6 @@ module PlayerLib =
         use libvlc = new LibVLC()
         new Media(libvlc, source)
 
-    let getEmptyPlayer =
+    let getEmptyPlayer : MediaPlayer =
         use libvlc = new LibVLC()
         new MediaPlayer(libvlc)

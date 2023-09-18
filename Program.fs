@@ -4,6 +4,7 @@ open Avalonia
 open Avalonia.Controls.ApplicationLifetimes
 open Avalonia.Themes.Fluent
 open SharpBeat.Lib.GUI
+open SharpBeat.Lib.DB.Playlist
 
 type App() =
     inherit Application()
@@ -22,6 +23,8 @@ module Program =
 
     [<EntryPoint>]
     let main(args: string[]) =
+        checkDBState()
+
         AppBuilder
             .Configure<App>()
             .UsePlatformDetect()

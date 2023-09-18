@@ -6,7 +6,7 @@ module Api =
     open System.Net
     open SharpBeat.Lib.Models.Song
 
-    let apiUrl = "http://179.50.238.48:8080/api/songs/"
+    let apiUrl = "http://localhost:8080/api/songs/"
     let private requestAsync (apiUrl: string) (query: string): Option<HttpResponseMessage> = 
         let client = new HttpClient()
         client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue("application/json"))
@@ -16,7 +16,7 @@ module Api =
                     client.Dispose()
                     return Some response
                 with
-                | ex -> return None
+                | _ -> return None
         } |> Async.RunSynchronously
     
     // NOTE: the reason I'm not using option here is because if there's an error

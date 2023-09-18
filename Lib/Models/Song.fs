@@ -12,4 +12,4 @@ module Song =
         override this.ToString () : string =
             sprintf "%s - %s" this.Artist this.Title
         member this.url () : string =
-            sprintf "http://179.50.238.48:8080/%s/outputlist.m3u8" this.Hash
+            sprintf "http://localhost:8080/%s/outputlist.m3u8" this.Hash

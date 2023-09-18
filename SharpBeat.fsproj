@@ -18,8 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Lib/DB/Playlist.fs" />
+    <Compile Include="Lib/Models/Types.fs" />
     <Compile Include="Lib/GUI/Colors.fs" />
-    <Compile Include="Lib/GUI/PlayerLib.fs" />
+    <Compile Include="Lib/Backend/PlayerLib.fs" />
     <Compile Include="Lib/Models/Song.fs" />
     <Compile Include="Lib/Backend/Api.fs" />
     <Compile Include="Lib/GUI/Icons.fs" />
@@ -36,8 +38,10 @@
     <PackageReference Include="Avalonia.FuncUI" Version="1.0.0" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0" />
     <PackageReference Include="FSharp.JsonApi" Version="2.1.1" />
+    <PackageReference Include="Fumble" Version="1.0.1" />
     <PackageReference Include="LibVLCSharp" Version="3.7.0" />
     <PackageReference Include="LibVLCSharp.Avalonia" Version="3.7.0" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
   </ItemGroup>
 
 </Project>

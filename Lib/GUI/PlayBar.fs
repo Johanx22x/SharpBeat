@@ -1,20 +1,19 @@
 namespace SharpBeat.Lib.GUI
 
 module PlayBar =
-    open Avalonia.FuncUI
     open Avalonia.Controls
     open Avalonia.FuncUI.DSL
     open Avalonia.Layout
     open SharpBeat.Lib.GUI
-    open SharpBeat.Lib.Models.Song
+    open SharpBeat.Lib.Models.Types
     open LibVLCSharp.Shared
-    open LibVLCSharp
-    open PlayerLib
-    open System
 
-    open LibVLCSharp.Avalonia
-
-    let mediaButtons = 
+    let mediaButtons (
+        playerState: PlayState,
+        onPlayStateChange,
+        onRequestPlay,
+        onShuffleRequested
+    ) =
         StackPanel.create [
             StackPanel.verticalAlignment VerticalAlignment.Bottom
             StackPanel.horizontalAlignment HorizontalAlignment.Center
@@ -26,22 +25,54 @@ module PlayBar =
                     Button.content Icons.previous
                     Button.width 100.0
                     Button.horizontalAlignment HorizontalAlignment.Center
+                    Button.classes [ "mediabtn" ]
+                    Button.onClick (fun _ -> onRequestPlay PlayDirection.Previous)
                 ]
-                Button.create [
-                    Button.content Icons.play
-                    Button.width 100.0
-                    Button.horizontalAlignment HorizontalAlignment.Center
-                ]
+                match playerState with 
+                | PlayState.Play ->
+                    Button.create [
+                        Button.content Icons.pause
+                        Button.width 100.0
+                        Button.horizontalAlignment HorizontalAlignment.Center
+                        Button.classes [ "mediabtn" ]
+                        Button.onClick (fun _ -> onPlayStateChange PlayState.Pause)
+                    ]
+
+                    Button.create [
+                        Button.content Icons.stop
+                        Button.width 100.0
+                        Button.horizontalAlignment HorizontalAlignment.Center
+                        Button.classes [ "mediabtn" ]
+                        Button.onClick (fun _ -> onPlayStateChange PlayState.Stop)
+                    ]
+                | _ ->
+                    Button.create [
+                        Button.content Icons.play
+                        Button.width 100.0
+                        Button.horizontalAlignment HorizontalAlignment.Center
+                        Button.classes [ "mediabtn" ]
+                        Button.onClick (fun _ -> onPlayStateChange PlayState.Pause)
+                    ]
                 Button.create [
                     Button.content Icons.next
                     Button.width 100.0
                     Button.horizontalAlignment HorizontalAlignment.Center
+                    Button.classes [ "mediabtn" ]
+                    Button.onClick (fun _ -> onRequestPlay PlayDirection.Next)
+                ]
+                Button.create [
+                    Button.content Icons.shuffle
+                    Button.width 100.0
+                    Button.horizontalAlignment HorizontalAlignment.Center
+                    Button.classes [ "mediabtn" ]
+                    Button.onClick (fun _ -> onShuffleRequested ())
                 ]
             ]
+            StackPanel.height 100.0
         ]
 
 
-    let progressBar min max curr = 
+    let progressBar (curr: int) (player: MediaPlayer) =
         StackPanel.create [
             StackPanel.verticalAlignment VerticalAlignment.Bottom
             StackPanel.horizontalAlignment HorizontalAlignment.Center
@@ -50,28 +81,28 @@ module PlayBar =
 
             StackPanel.children [
                 Slider.create [
-                    Slider.minimum min
-                    Slider.maximum max
+                    Slider.minimum 0.0
+                    Slider.maximum 100.0
                     Slider.value curr
                     Slider.width 428.0
                     Slider.horizontalAlignment HorizontalAlignment.Center
+
+                    Slider.onValueChanged (fun value ->
+                        if (int value) <> (int (float player.Position * 100.0)) then
+                            player.Position <- (float value / 100.0) |> float32
+                    )
                 ]
             ]
         ]
 
-    let playBar (song: IWritable<Option<Song>>) = 
-
-        // XXX: uncomment this, this works for playing audio, apparently there's a media player component available from
-        // the vlcsharp avalonia library, we just need to dig deeper lmao
-        // let player = getEmptyPlayer
-        // let media = song.Current |>
-        //              function 
-        //              | Some(song) -> getMediaFromUri(new Uri(song.url()))
-        //              | None -> getMediaFromUri(new Uri("file://"))
-    
-        // TODO: yk
-        // player.Media <- media
-        // player.Play() |> ignore
+    let playBar ( // (song: IWritable<Option<Song>>) = 
+        playerState: PlayState,
+        progress: int,
+        player: MediaPlayer,
+        onPlayStateChange,
+        onRequestPlay,
+        onShuffleRequested
+    ) =
 
         StackPanel.create [
             StackPanel.verticalAlignment VerticalAlignment.Bottom
@@ -79,8 +110,13 @@ module PlayBar =
             StackPanel.orientation Orientation.Vertical
             StackPanel.dock Dock.Right
             StackPanel.children [
-                mediaButtons
-                // NOTE: I'm planning on somwhow getting these values from the player
-                progressBar 0 100 46
+                mediaButtons (
+                    playerState,
+                    onPlayStateChange,
+                    onRequestPlay,
+                    onShuffleRequested
+                )
+
+                progressBar progress player
             ]
         ]
