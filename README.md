@@ -25,11 +25,11 @@ for details.
 
 # TODO:
 
-- [X] Reproducir la rola (Play, Pause, ...)
-- [X] Slider de volumen
-- [X] Los filtros
-- [] Manejar playlists (CRUD)
+- [X] Play, Pause, ... a song
+- [X] Volume slider
+- [X] Add filters
+- [ ] Add CRUD operations on playlists
 
 ## Optional
-- [] Fix current is changed when shuffle or refresh
-- [] Fix filters to work simultaneously
+- [ ] Fix current is changed when shuffle or refresh
+- [ ] Fix filters to work simultaneously
