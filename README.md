@@ -8,9 +8,10 @@
 
 Welcome to SharpBeat repository! This project aims to provide a frontend
 application for a music streaming application using the F# programming
-language. It allows you to manage songs, albums, playlists, and more.
+language and Avalonia framework. It allows you to manage songs and playlists.
 
-This is part of a project for my Programming Languages course at Costa Rica 
+This application is hardcoded to work with [zSnails/plyr](https://github.com/zSnails/plyr)
+music server. As part of a project for my Programming Languages course at Costa Rica 
 Institute of Technology.
 
 ![application](docs/app.png)
@@ -27,11 +28,5 @@ for details.
 
 # TODO:
 
-- [X] Play, Pause, ... a song
-- [X] Volume slider
-- [X] Add filters
-- [X] Add CRUD operations on playlists
-
-## Optional
 - [ ] Fix current is changed when shuffle or refresh
 - [ ] Fix filters to work simultaneously
