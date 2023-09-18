@@ -28,7 +28,7 @@ for details.
 - [X] Play, Pause, ... a song
 - [X] Volume slider
 - [X] Add filters
-- [ ] Add CRUD operations on playlists
+- [X] Add CRUD operations on playlists
 
 ## Optional
 - [ ] Fix current is changed when shuffle or refresh
