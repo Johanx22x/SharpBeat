@@ -22,6 +22,7 @@ module MainWindow =
             let genres = ctx.useState<string list>(["All"])
             let songs = ctx.useState<Song list>([])
             let current = ctx.useState<Song option>(None)
+            let currentPlaylist = ctx.useState<string option>(None)
             let playlists = ctx.useState<Playlist list>(getPlaylists())
             let player = getEmptyPlayer
             let playerState = ctx.useState<Types.PlayState>(Types.PlayState.Stop)
@@ -69,6 +70,7 @@ module MainWindow =
                             removePlaylistSong (playlist, song)
                     )
 
+                    currentPlaylist.Set(Some(playlist))
                     songs.Set(serverSongs)
                 | _ -> ()
 
@@ -129,24 +131,14 @@ module MainWindow =
 
                                     songs.Set(_songs)
                                 )
-
-                                // Refresh button
-                                Button.create [
-                                    Button.background Colors.Light.primary
-                                    Button.content Icons.refresh
-                                    Button.margin (Thickness (10., 0., 0., 0.))
-                                    Button.horizontalAlignment HorizontalAlignment.Center
-                                    Button.verticalAlignment VerticalAlignment.Center
-                                    Button.onClick (fun _ -> 
-                                        songs.Set(Api.getSongs "")
-                                    )
-                                ]
-
                             ]
 
                             DockPanel.dock Dock.Top
                             DockPanel.margin 10.
                         ]
+
+                        // NOTE: Consider to change this
+                        ToolBar.toolBar false songs playlists
                         
                         // Song list
                         ListBox.create [
@@ -179,7 +171,13 @@ module MainWindow =
                                                     MenuItem.create [
                                                         MenuItem.header playlist.name
                                                         MenuItem.onClick (fun _ ->
-                                                            addPlaylistSong (playlist.name, current.Current.Value.Hash)
+                                                            let _songs = getSongs()
+                                                            if _songs |> List.exists (fun song -> fst song = current.Current.Value.Hash) then
+                                                                addPlaylistSong (playlist.name, current.Current.Value.Hash)
+                                                            else 
+                                                                addSong (current.Current.Value.Hash, current.Current.Value.Title)
+                                                                addPlaylistSong (playlist.name, current.Current.Value.Hash)
+                                                            playlists.Set(getPlaylists())
                                                         )
                                                     ]
                                                 )
@@ -200,6 +198,7 @@ module MainWindow =
                                                         MenuItem.header playlist.name
                                                         MenuItem.onClick (fun _ ->
                                                             removePlaylistSong (playlist.name, current.Current.Value.Hash)
+                                                            playlists.Set(getPlaylists())
                                                         )
                                                     ]
                                                 )
@@ -220,15 +219,23 @@ module MainWindow =
                         DockPanel.create [ 
                             DockPanel.horizontalAlignment HorizontalAlignment.Center
                             DockPanel.children [
-                                SearchBar.searchBar "Playlists" (fun a -> a |> ignore)
+                                SearchBar.searchBar "Playlists" (fun (value: string) -> 
+                                    let _playlists = getPlaylists()
+                                    if _playlists.Length = 0 then
+                                        playlists.Set(_playlists)
+                                    else
+                                        if value = null || value = "" then
+                                            playlists.Set(_playlists)
+                                        else
+                                            playlists.Set(_playlists |> List.filter (fun playlist -> playlist.name.ToLower().Contains(value.ToLower())))
+                                )
                             ]
                             DockPanel.dock Dock.Top
                             DockPanel.margin 10.
                         ]
 
-
-                        // Tool bar
-                        ToolBar.toolBar
+                        // NOTE: Consider to change this
+                        ToolBar.toolBar true songs playlists
 
                         // Playlist list
                         ListBox.create [
@@ -236,6 +243,24 @@ module MainWindow =
                             ListBox.dock Dock.Top
                             ListBox.onSelectedItemChanged (fun playlist ->
                                 selectPlaylist playlist
+                                currentPlaylist.Set(Some(string playlist))
+                            )
+                            ListBox.contextMenu (
+                                ContextMenu.create [
+                                    ContextMenu.viewItems [
+                                        MenuItem.create [
+                                            MenuItem.header "Delete playlist"
+                                            MenuItem.onClick (fun _ ->
+                                                removePlaylist (currentPlaylist.Current.Value)
+
+                                                // Remove each entry in PlaylistSong table that has the same playlist name 
+                                                removePlaylistSongs (currentPlaylist.Current.Value)
+
+                                                playlists.Set(getPlaylists())
+                                            )
+                                        ]
+                                    ]
+                                ]
                             )
                         ]
 

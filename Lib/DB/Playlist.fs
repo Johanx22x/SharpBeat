@@ -79,6 +79,28 @@ module Playlist =
 
         playlists
 
+    let getSongs () : (string * string) list =
+        let db = connection()
+        db.Open()
+
+        let cmd = new SQLiteCommand(db)
+        cmd.CommandText <- "SELECT * FROM songs"
+        let reader = cmd.ExecuteReader()
+
+        let rec readSongs (songs: (string * string) list) =
+            if reader.Read() then
+                let hash = reader.GetString(0)
+                let name = reader.GetString(1)
+                readSongs ((hash, name) :: songs)
+            else
+                songs
+
+        let songs = readSongs []
+
+        db.Close()
+
+        songs
+
     let addPlaylist (name) =
         let db = connection()
         db.Open()
@@ -144,6 +166,17 @@ module Playlist =
         cmd.CommandText <- "DELETE FROM playlist_songs WHERE playlist = @playlist AND song = @song"
         cmd.Parameters.Add("@playlist", DbType.String).Value <- playlist
         cmd.Parameters.Add("@song", DbType.String).Value <- song
+        cmd.ExecuteNonQuery() |> ignore
+
+        db.Close()
+
+    let removePlaylistSongs (playlist) =
+        let db = connection()
+        db.Open()
+
+        let cmd = new SQLiteCommand(db)
+        cmd.CommandText <- "DELETE FROM playlist_songs WHERE playlist = @playlist"
+        cmd.Parameters.Add("@playlist", DbType.String).Value <- playlist
         cmd.ExecuteNonQuery() |> ignore
 
         db.Close()

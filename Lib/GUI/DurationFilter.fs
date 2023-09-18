@@ -53,7 +53,7 @@ module DurationFilter =
                                 | _ -> onChanged (initial) (final)
                             )
 
-                            TextBox.watermark "0"
+                            TextBox.watermark "∞"
                         ]
                     ]
                     StackPanel.orientation Orientation.Horizontal

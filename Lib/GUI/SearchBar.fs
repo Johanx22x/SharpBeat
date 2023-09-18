@@ -20,7 +20,7 @@ module SearchBar =
                     TextBox.borderBrush Colors.Light.background
                     TextBox.dock Dock.Left
                     TextBox.width 280.
-                    // TODO: add a debounce here because just
+                    // NOTE: add a debounce here because just
                     // spamming the server with requests every
                     // second is not optimal
                     TextBox.onTextChanged onChanged
