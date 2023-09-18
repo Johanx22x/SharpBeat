@@ -13,6 +13,8 @@ language. It allows you to manage songs, albums, playlists, and more.
 This is part of a project for my Programming Languages course at Costa Rica 
 Institute of Technology.
 
+![application](docs/app.png)
+
 ## Contributing
 
 Contributions are welcome! Feel free to open issues for bug reports, feature
