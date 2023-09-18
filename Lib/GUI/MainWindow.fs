@@ -48,14 +48,6 @@ module MainWindow =
                     current.Set(Some(song))
                 | _ -> ()
 
-            let checkIfIsPlaying () =
-                if player.IsPlaying then
-                    playerState.Set(Types.PlayState.Play)
-                else
-                    playerState.Set(Types.PlayState.Stop)
-
-            checkIfIsPlaying()
-
             let selectPlaylist (playlist: obj) =
                 match playlist with
                 | :? string as playlist -> 
@@ -336,6 +328,16 @@ module MainWindow =
                 let shuffledSongs = songs.Current |> shuffle
                 songs.Set(shuffledSongs)
                 setCurrent current.Current
+
+            let checkIfIsPlaying () =
+                if float (player.Position * float32 100.0) >= 99.0 then
+                    setCurrent (getNextSong songs.Current current.Current)
+                elif player.IsPlaying then
+                    playerState.Set(Types.PlayState.Play)
+                else
+                    playerState.Set(Types.PlayState.Stop)
+
+            checkIfIsPlaying()
 
             DockPanel.create [
                 DockPanel.children [
