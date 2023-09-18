@@ -24,6 +24,7 @@ module MainWindow =
             let playlists = ctx.useState<Playlist list>(getPlaylists())
             let player = getEmptyPlayer
             let playerState = ctx.useState<Types.PlayState>(Types.PlayState.Stop)
+            let lastVolume = ctx.useState<int>(0)
 
             let getCachedGenres () =
                 if genres.Current.Length <= 1 then
@@ -42,7 +43,7 @@ module MainWindow =
 
                     playerState.Set(Types.PlayState.Play)
 
-                    current.Set(Some song)
+                    current.Set(Some(song))
                 | _ -> ()
 
             let checkIfIsPlaying () =
@@ -275,9 +276,10 @@ module MainWindow =
                 |> Array.fold randomSwap arr
                 |> Array.toList
 
-            let onShuffleRequested () = 
+            let onShuffleRequested() = 
                 let shuffledSongs = songs.Current |> shuffle
                 songs.Set(shuffledSongs)
+                setCurrent current.Current
 
             DockPanel.create [
                 DockPanel.children [
@@ -286,15 +288,56 @@ module MainWindow =
                         Border.child (
                             DockPanel.create [
                                 DockPanel.children [
-                                    // Play bar
-                                    PlayBar.playBar (
-                                        playerState.Current,
-                                        (float player.Position * 100.) |> int,
-                                        player,
-                                        onPlayStateChange,
-                                        onRequestPlay,
-                                        onShuffleRequested
-                                    )
+                                    StackPanel.create [
+                                        StackPanel.verticalAlignment VerticalAlignment.Bottom
+                                        StackPanel.horizontalAlignment HorizontalAlignment.Center
+                                        StackPanel.orientation Orientation.Horizontal
+                                        StackPanel.children [
+                                            // Play bar
+                                            PlayBar.playBar (
+                                                if current.Current.IsSome then 
+                                                    current.Current.Value.Title 
+                                                else 
+                                                    ""
+                                                ,
+                                                playerState.Current,
+                                                (float player.Position * 100.) |> int,
+                                                player,
+                                                onPlayStateChange,
+                                                onRequestPlay,
+                                                onShuffleRequested
+                                            )
+
+                                            StackPanel.create [
+                                                StackPanel.verticalAlignment VerticalAlignment.Bottom
+                                                StackPanel.horizontalAlignment HorizontalAlignment.Center
+                                                StackPanel.orientation Orientation.Vertical
+                                                StackPanel.children [
+                                                    // Volume slider
+                                                    Slider.create [
+                                                        Slider.orientation Orientation.Vertical
+                                                        Slider.minimum 0.
+                                                        Slider.maximum 100.
+                                                        Slider.value player.Volume
+                                                        Slider.height 90.
+                                                        Slider.onValueChanged (fun value ->
+                                                            player.Volume <- (int value)
+                                                        )
+                                                        Slider.onPointerPressed (fun _ ->
+                                                            if player.Volume = 0 then
+                                                                player.Volume <- lastVolume.Current
+                                                            else
+                                                                lastVolume.Set(player.Volume)
+                                                                player.Volume <- 0
+                                                        )
+                                                    ]
+
+                                                    // Volume icon 
+                                                    Icons.volume
+                                                ]
+                                            ]
+                                        ]
+                                    ]
                                 ]
                             ]
                         )

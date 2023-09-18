@@ -19,8 +19,8 @@ module ToolBar =
                             Button.content Icons.create
                             Button.width 50.0
                             Button.horizontalAlignment HorizontalAlignment.Center
-                            Button.onClick (fun _ -> ()
-                                // Spawn a dialog to create a new playlist
+                            Button.onClick (fun _ -> 
+                                printfn "Create playlist"
                             )
                         ]
     
@@ -33,7 +33,9 @@ module ToolBar =
                             Button.content Icons.remove
                             Button.width 50.0
                             Button.horizontalAlignment HorizontalAlignment.Center
-                            Button.onClick (fun _ -> printfn "Remove playlist")
+                            Button.onClick (fun _ -> 
+                                printfn "Remove playlist"
+                            )
                         ]
                     ]
                 ]

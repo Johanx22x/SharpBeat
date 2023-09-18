@@ -4,6 +4,7 @@ module PlayBar =
     open Avalonia.Controls
     open Avalonia.FuncUI.DSL
     open Avalonia.Layout
+    open Avalonia.Media
     open SharpBeat.Lib.GUI
     open SharpBeat.Lib.Models.Types
     open LibVLCSharp.Shared
@@ -37,14 +38,6 @@ module PlayBar =
                         Button.classes [ "mediabtn" ]
                         Button.onClick (fun _ -> onPlayStateChange PlayState.Pause)
                     ]
-
-                    Button.create [
-                        Button.content Icons.stop
-                        Button.width 100.0
-                        Button.horizontalAlignment HorizontalAlignment.Center
-                        Button.classes [ "mediabtn" ]
-                        Button.onClick (fun _ -> onPlayStateChange PlayState.Stop)
-                    ]
                 | _ ->
                     Button.create [
                         Button.content Icons.play
@@ -65,7 +58,7 @@ module PlayBar =
                     Button.width 100.0
                     Button.horizontalAlignment HorizontalAlignment.Center
                     Button.classes [ "mediabtn" ]
-                    Button.onClick (fun _ -> onShuffleRequested ())
+                    Button.onClick (fun _ -> onShuffleRequested())
                 ]
             ]
             StackPanel.height 100.0
@@ -96,6 +89,7 @@ module PlayBar =
         ]
 
     let playBar ( // (song: IWritable<Option<Song>>) = 
+        songName: string,
         playerState: PlayState,
         progress: int,
         player: MediaPlayer,
@@ -108,8 +102,15 @@ module PlayBar =
             StackPanel.verticalAlignment VerticalAlignment.Bottom
             StackPanel.horizontalAlignment HorizontalAlignment.Center
             StackPanel.orientation Orientation.Vertical
-            StackPanel.dock Dock.Right
             StackPanel.children [
+                TextBlock.create [
+                    TextBlock.text songName
+                    TextBlock.horizontalAlignment HorizontalAlignment.Center
+                    TextBlock.fontWeight FontWeight.Bold
+                    TextBlock.fontSize 20.
+                    TextBlock.margin 10.
+                ]
+
                 mediaButtons (
                     playerState,
                     onPlayStateChange,
