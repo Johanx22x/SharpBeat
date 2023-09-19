@@ -91,6 +91,7 @@ module PlayBar =
 
     let playBar ( // (song: IWritable<Option<Song>>) = 
         songName: string,
+        songArtist: string,
         playerState: PlayState,
         progress: int,
         player: MediaPlayer,
@@ -108,8 +109,15 @@ module PlayBar =
                     TextBlock.text songName
                     TextBlock.horizontalAlignment HorizontalAlignment.Center
                     TextBlock.fontWeight FontWeight.Bold
-                    TextBlock.fontSize 20.
+                    TextBlock.fontSize 25.
                     TextBlock.margin (Thickness (0., 20., 0., 0.))
+                ]
+
+                TextBlock.create [
+                    TextBlock.text songArtist
+                    TextBlock.horizontalAlignment HorizontalAlignment.Center
+                    TextBlock.fontSize 15.
+                    TextBlock.margin (Thickness (0., 0., 0., 0.))
                 ]
 
                 mediaButtons (

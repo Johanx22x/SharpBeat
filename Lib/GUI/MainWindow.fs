@@ -352,8 +352,13 @@ module MainWindow =
                                             // Play bar
                                             PlayBar.playBar (
                                                 if current.Current.IsSome then 
-                                                    current.Current.Value.Title 
+                                                    current.Current.Value.Title
                                                 else 
+                                                    ""
+                                                ,
+                                                if current.Current.IsSome then 
+                                                    current.Current.Value.Artist
+                                                else
                                                     ""
                                                 ,
                                                 playerState.Current,
