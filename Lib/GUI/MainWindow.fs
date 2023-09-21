@@ -424,7 +424,7 @@ module MainWindow =
     type MainWindow() =
         inherit HostWindow()
         do
-            base.Title <- "SharpTune"
+            base.Title <- "SharpBeat"
             base.Content <- view()
             base.Icon <- WindowIcon("Assets/Icons/icon.ico")
             base.MinWidth <- 800.0
