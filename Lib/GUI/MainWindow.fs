@@ -66,6 +66,57 @@ module MainWindow =
                     songs.Set(serverSongs)
                 | _ -> ()
 
+            let createPlaylistContextMenu () =
+                    ListBox.contextMenu (
+                        ContextMenu.create [
+                            ContextMenu.viewItems [
+                                MenuItem.create [
+                                    MenuItem.header "Add to playlist"
+                                    MenuItem.viewItems (
+                                        let _playlists = getPlaylists() |> List.filter (fun playlist -> not (playlist.songs |> List.exists (fun song -> if current.Current.IsSome then song = current.Current.Value.Hash else false)))
+                                        _playlists |> List.map (fun playlist -> 
+                                            let playlistToAdd = playlist
+                                            MenuItem.create [
+                                                MenuItem.header playlistToAdd.name
+                                                MenuItem.onClick (fun _ ->
+                                                    if getSongs() |> List.exists (fun song -> fst song = current.Current.Value.Hash) then
+                                                        addSong(current.Current.Value.Hash, current.Current.Value.Title)
+                                                    addPlaylistSong (playlistToAdd.name, current.Current.Value.Hash)
+                                                    playlists.Set(getPlaylists())
+                                                    printfn "Current elements: %A" _playlists
+                                                    printfn "Added song %s to playlist %s" current.Current.Value.Title playlistToAdd.name
+                                                )
+                                            ]
+                                        )
+                                    )
+                                ]
+
+                                MenuItem.create [
+                                    MenuItem.header "Remove from playlist"
+                                    MenuItem.viewItems (
+                                        let _playlists = getPlaylists() |> List.filter (fun playlist -> playlist.songs |> List.exists (fun song -> if current.Current.IsSome then song = current.Current.Value.Hash else false))
+                                        _playlists |> List.map (fun playlist -> 
+                                                let playlistToRemove = playlist
+                                                MenuItem.create [
+                                                    MenuItem.header playlistToRemove.name
+                                                    MenuItem.onClick (fun _ ->
+                                                        removePlaylistSong (playlistToRemove.name, current.Current.Value.Hash)
+                                                        playlists.Set(getPlaylists())
+                                                        printfn "Current elements: %A" _playlists
+                                                        printfn "Removed song %s from playlist %s" current.Current.Value.Title playlistToRemove.name
+                                                    )
+                                                ]
+                                        )
+                                    )
+                                ]
+                            ]
+                        ]
+                    )
+
+            let mutable playlistContextMenu = createPlaylistContextMenu()
+
+            playlistContextMenu <- createPlaylistContextMenu()
+
             let songsPageContent = 
                 DockPanel.create [ 
                     DockPanel.children [
@@ -146,43 +197,7 @@ module MainWindow =
                                 )
                             )
 
-                            ListBox.contextMenu (
-                                ContextMenu.create [
-                                    ContextMenu.viewItems [
-                                        MenuItem.create [
-                                            MenuItem.header "Add to playlist"
-                                            MenuItem.viewItems (
-                                                let _playlists = getPlaylists() |> List.filter (fun playlist -> not (playlist.songs |> List.exists (fun song -> if current.Current.IsSome then song = current.Current.Value.Hash else false)))
-                                                _playlists |> List.map (fun playlist -> 
-                                                    MenuItem.create [
-                                                        MenuItem.header playlist.name
-                                                        MenuItem.onClick (fun _ ->
-                                                            addPlaylistSong (playlist.name, current.Current.Value.Hash)
-                                                            playlists.Set(getPlaylists())
-                                                        )
-                                                    ]
-                                                )
-                                            )
-                                        ]
-
-                                        MenuItem.create [
-                                            MenuItem.header "Remove from playlist"
-                                            MenuItem.viewItems (
-                                                let _playlists = getPlaylists() |> List.filter (fun playlist -> playlist.songs |> List.exists (fun song -> if current.Current.IsSome then song = current.Current.Value.Hash else false))
-                                                _playlists |> List.map (fun playlist -> 
-                                                        MenuItem.create [
-                                                            MenuItem.header playlist.name
-                                                            MenuItem.onClick (fun _ ->
-                                                                removePlaylistSong (playlist.name, current.Current.Value.Hash)
-                                                                playlists.Set(getPlaylists())
-                                                            )
-                                                        ]
-                                                )
-                                            )
-                                        ]
-                                    ]
-                                ]
-                            )
+                            playlistContextMenu 
                         ]
                     ]
                     DockPanel.background Colors.Light.background
