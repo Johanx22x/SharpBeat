@@ -9,6 +9,8 @@ module PlayBar =
     open SharpBeat.Lib.GUI
     open SharpBeat.Lib.Models.Types
     open LibVLCSharp.Shared
+    open LibVLCSharp.Shared.Structures
+    open System
 
     let mediaButtons (
         playerState: PlayState,
@@ -66,14 +68,24 @@ module PlayBar =
         ]
 
 
-    let progressBar (curr: int) (player: MediaPlayer) =
+    let progressBar (curr: int) (player: MediaPlayer) (songDuration: int) =
         StackPanel.create [
             StackPanel.verticalAlignment VerticalAlignment.Bottom
             StackPanel.horizontalAlignment HorizontalAlignment.Center
-            StackPanel.orientation Orientation.Horizontal
+            StackPanel.orientation Orientation.Vertical
             StackPanel.dock Dock.Bottom
 
             StackPanel.children [
+                // Duration TextBlock
+                TextBlock.create [
+                    let songLength = TimeSpan.FromSeconds (float songDuration)
+                    let actualPosition = TimeSpan.FromSeconds (float (player.Position * float32 songDuration))
+                    TextBlock.text (if player.Length > 0L then actualPosition.ToString(@"mm\:ss") + " / " + songLength.ToString(@"mm\:ss") else "00:00 / 00:00")
+                    TextBlock.horizontalAlignment HorizontalAlignment.Center
+                    TextBlock.fontSize 15.
+                    TextBlock.margin (Thickness (0., 0., 0., 0.))
+                ]
+
                 Slider.create [
                     Slider.minimum 0.0
                     Slider.maximum 100.0
@@ -92,6 +104,7 @@ module PlayBar =
     let playBar ( // (song: IWritable<Option<Song>>) = 
         songName: string,
         songArtist: string,
+        songDuration: int,
         playerState: PlayState,
         progress: int,
         player: MediaPlayer,
@@ -127,6 +140,6 @@ module PlayBar =
                     onShuffleRequested
                 )
 
-                progressBar progress player
+                progressBar progress player songDuration
             ]
         ]

@@ -152,47 +152,31 @@ module MainWindow =
                                         MenuItem.create [
                                             MenuItem.header "Add to playlist"
                                             MenuItem.viewItems (
-                                                playlists.Current |> List.filter (fun playlist ->
-                                                    not (playlist.songs |> List.exists (fun song -> 
-                                                        if current.Current.IsSome then
-                                                            song = current.Current.Value.Hash
-                                                        else
-                                                            false
-                                                    ))
-                                                ) |> List.map (fun playlist ->
+                                                let _playlists = getPlaylists() |> List.filter (fun playlist -> not (playlist.songs |> List.exists (fun song -> if current.Current.IsSome then song = current.Current.Value.Hash else false)))
+                                                _playlists |> List.map (fun playlist -> 
                                                     MenuItem.create [
                                                         MenuItem.header playlist.name
                                                         MenuItem.onClick (fun _ ->
-                                                            let _songs = getSongs()
-                                                            if _songs |> List.exists (fun song -> fst song = current.Current.Value.Hash) then
-                                                                addPlaylistSong (playlist.name, current.Current.Value.Hash)
-                                                            else 
-                                                                addSong (current.Current.Value.Hash, current.Current.Value.Title)
-                                                                addPlaylistSong (playlist.name, current.Current.Value.Hash)
+                                                            addPlaylistSong (playlist.name, current.Current.Value.Hash)
                                                             playlists.Set(getPlaylists())
                                                         )
                                                     ]
                                                 )
                                             )
                                         ]
+
                                         MenuItem.create [
                                             MenuItem.header "Remove from playlist"
                                             MenuItem.viewItems (
-                                                playlists.Current |> List.filter (fun playlist ->
-                                                    playlist.songs |> List.exists (fun song -> 
-                                                        if current.Current.IsSome then
-                                                            song = current.Current.Value.Hash
-                                                        else
-                                                            false
-                                                    )
-                                                ) |> List.map (fun playlist ->
-                                                    MenuItem.create [
-                                                        MenuItem.header playlist.name
-                                                        MenuItem.onClick (fun _ ->
-                                                            removePlaylistSong (playlist.name, current.Current.Value.Hash)
-                                                            playlists.Set(getPlaylists())
-                                                        )
-                                                    ]
+                                                let _playlists = getPlaylists() |> List.filter (fun playlist -> playlist.songs |> List.exists (fun song -> if current.Current.IsSome then song = current.Current.Value.Hash else false))
+                                                _playlists |> List.map (fun playlist -> 
+                                                        MenuItem.create [
+                                                            MenuItem.header playlist.name
+                                                            MenuItem.onClick (fun _ ->
+                                                                removePlaylistSong (playlist.name, current.Current.Value.Hash)
+                                                                playlists.Set(getPlaylists())
+                                                            )
+                                                        ]
                                                 )
                                             )
                                         ]
@@ -363,6 +347,11 @@ module MainWindow =
                                                 else
                                                     ""
                                                 ,
+                                                (if current.Current.IsSome then 
+                                                    int current.Current.Value.Duration
+                                                else
+                                                    0
+                                                ),
                                                 playerState.Current,
                                                 (float player.Position * 100.) |> int,
                                                 player,

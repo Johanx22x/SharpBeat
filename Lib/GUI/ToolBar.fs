@@ -9,15 +9,24 @@ module ToolBar =
     open SharpBeat.Lib.Models.Song
     open SharpBeat.Lib.Backend
     open SharpBeat.Lib.DB.Playlist
+    open Avalonia.Media
 
     let mutable killableWindow : Window = null
 
     let createPlaylistView(playlist: IWritable<Playlist list>) =
         Component(fun ctx ->
             let playlistName = ctx.useState<string>("")
+            let error = ctx.useState<string>("")
 
             StackPanel.create [
                 StackPanel.children [
+                    TextBlock.create [
+                        TextBlock.text error.Current
+                        TextBlock.foreground "#FF0000"
+                        TextBlock.fontWeight FontWeight.Bold
+                        TextBlock.margin (Thickness(0., 10., 0., 0.))
+                    ]
+
                     TextBlock.create [
                         TextBlock.text "Playlist name:"
                         TextBlock.margin (Thickness(0., 10., 0., 0.))
@@ -39,9 +48,13 @@ module ToolBar =
                                 Button.onClick (fun _ -> 
                                     let name = string playlistName.Current
                                     if name <> "" then
-                                        addPlaylist name
-                                        playlist.Set(getPlaylists())
-                                        killableWindow.Close()
+                                        if getPlaylists() |> List.exists (fun p -> p.name = name) then
+                                            error.Set("Playlist already exists!")
+                                            ctx.forceRender()
+                                        else
+                                            addPlaylist name
+                                            playlist.Set(getPlaylists())
+                                            killableWindow.Close()
                                 )
                             ]
                             Button.create [
